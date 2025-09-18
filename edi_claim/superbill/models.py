@@ -248,13 +248,14 @@ class EDIClaim(models.Model):
         help_text="Name of the billing provider or facility submitting the claim."
     )
 
-    billing_provider_npi = models.CharField(
-        max_length=20,
-        blank=True,
-        help_text="National Provider Identifier (NPI) of the billing provider."
+    billing_provider_npi = models.ForeignKey(
+        "Provider",
+        on_delete=models.PROTECT,
+        related_name="billed_claims",
+        help_text="The provider or organization submitting the claim (billing NPI)."
     )
 
-    payer_id = models.ForeignKey(
+    payer = models.ForeignKey(
         "EDIPayer",
         null=True,
         blank=True,
@@ -273,13 +274,15 @@ class EDIClaim(models.Model):
 
 
 
-class ClaimDiagnosis(models.Model):
+class EDIClaimDiagnosis(models.Model):
+
     claim = models.ForeignKey(
         EDIClaim, 
         on_delete=models.CASCADE, 
         related_name="diagnoses",
         help_text="The claim this diagnosis is associated with."
     )
+
     diagnosis_code = models.ForeignKey(
         'ICDCode', 
         on_delete=models.PROTECT,
@@ -287,18 +290,21 @@ class ClaimDiagnosis(models.Model):
     )
 
 
-class MedicationLine(models.Model):
+class EDIMedicationLine(models.Model):
+
     service_line = models.ForeignKey(
         'ServiceLine', 
         on_delete=models.CASCADE, 
         related_name="medications",
         help_text="The service line this medication is associated with."
     )
+
     ndc_code = models.ForeignKey(
         'NDCCode', 
         on_delete=models.PROTECT,
         help_text="National Drug Code identifying the specific medication or drug administered."
     )
+    
     quantity = models.DecimalField(
         max_digits=10, 
         decimal_places=2,
@@ -317,14 +323,29 @@ class ServiceLine(models.Model):
         help_text="The claim this service line belongs to."
     )
 
+    rendering_provider = models.ForeignKey(
+        'EDIProvider',
+        on_delete=models.PROTECT,
+        related_name="rendered_service_lines",
+        help_text="The provider who actually performed the service (rendering NPI)."
+    )
+
+    procedure = models.ForeignKey(
+        'ProcedureCode',
+        on_delete=models.PROTECT,
+        help_text="The CPT or HCPCS code representing the medical \
+        procedure or service performed for this service line."
+    ) 
+
     line_number = models.PositiveIntegerField(
         help_text="Sequential line number for this service within the claim."
     )
 
-    cpt_code = models.CharField(
-        max_length=10,
-        help_text="Procedure or service code (CPT/HCPCS) for this line."
-    )
+    emg_service_pointer = models.BooleanField(
+        default=False,
+        help_text="Indicates if this service line was an emergency service."
+    )  
+
 
     charge_amount = models.DecimalField(
         max_digits=10,
@@ -332,6 +353,18 @@ class ServiceLine(models.Model):
         help_text="Charge amount for this individual service line."
     )
 
+    place_of_service = models.CharField(
+        max_length=2,
+        help_text="Place of Service (POS) code indicating where the service was performed, \
+        e.g., 11=Office, 21=Inpatient Hospital."
+    )
+
+    units = models.IntegerField(
+        default=1,
+        help_text="The number of times the procedure or service was performed. \
+        For example, if a lab test was done twice, set units=2."
+    )
+    
     service_date = models.DateField(
         help_text="Date the specific service was provided."
     )
