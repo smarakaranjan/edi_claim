@@ -2,7 +2,7 @@
 from itertools import chain
 
 # Module import's
-from edi_claim.models import EDILoop
+from superbill.models import EDILoop
 
 class Dynamic837ClaimEngine:
     
