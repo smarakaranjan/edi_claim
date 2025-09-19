@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'edi'
+    'superbill'
 ]
 
 MIDDLEWARE = [
@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'edi_claim.wsgi.application'
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pillar1',
+        'NAME': 'pillar2',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',

@@ -8,3 +8,6 @@ def ping_view(request):
 urlpatterns = [
     path("ping/", ping_view, name="edi-ping"),
 ]
+
+
+
