@@ -1,13 +1,21 @@
-from django.urls import path
-from django.http import JsonResponse
+# urls.py
+from django.urls import path, include
 
-# simple test view (so you can hit /api/edi/ping/ and see a response)
-def ping_view(request):
-    return JsonResponse({"status": "ok", "message": "EDI app alive"})
+from rest_framework.routers import DefaultRouter
+
+from superbill.views import (
+    EDIProviderViewSet, 
+    EDIPayerEndpointViewSet, 
+    EDIPayerPayloadViewSet,
+    EDIClaimViewSet
+)
+
+router = DefaultRouter()
+router.register(r"providers", EDIProviderViewSet)
+router.register(r"payer-endpoints", EDIPayerEndpointViewSet)
+router.register(r"payer-payloads", EDIPayerPayloadViewSet)
+router.register(r"claim", EDIClaimViewSet, basename="claims")
 
 urlpatterns = [
-    path("ping/", ping_view, name="edi-ping"),
+    path("", include(router.urls)),
 ]
-
-
-

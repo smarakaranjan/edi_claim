@@ -520,6 +520,34 @@ class EDIMedicationLine(models.Model):
         verbose_name = "EDI Medication Line"
         verbose_name_plural = "EDI Medication Lines"
 
+class EDIServiceLineDiagnosisPointer(models.Model):
+
+    service_line = models.ForeignKey(
+        "superbill.EDIServiceLine",
+        on_delete=models.CASCADE,
+        related_name="diagnosis_pointer_links"
+    )
+
+    diagnosis = models.ForeignKey(
+        "superbill.EDIClaimDiagnosis",
+        on_delete=models.CASCADE,
+        related_name="pointer_links"
+    )
+
+    pointer_order = models.PositiveSmallIntegerField(
+        choices=[(1, "Pointer 1"), (2, "Pointer 2"), (3, "Pointer 3"), (4, "Pointer 4")],
+        help_text="Order of this diagnosis pointer in SV107 (max 4)."
+    )
+
+    class Meta:
+        db_table = "superbill_edi_service_line_pointer"
+        unique_together = ("service_line", "pointer_order")
+        ordering = ["pointer_order"]
+
+    def __str__(self):
+        return f"ServiceLine {self.service_line.line_number} → {self.diagnosis.diagnosis_code} (Pointer {self.pointer_order})"
+
+
 class EDIServiceLine(models.Model):
     """
     Represents a single billable service within a claim (corresponds to 2400 loop in 837).
@@ -546,12 +574,6 @@ class EDIServiceLine(models.Model):
         procedure or service performed for this service line."
     ) 
 
-    diagnosis_pointers = models.ManyToManyField(
-        'EDIClaimDiagnosis',
-        related_name="service_lines",
-        help_text="The ICD diagnoses from the claim that justify this service line (diagnosis pointers)."
-    )
-
     line_number = models.PositiveIntegerField(
         help_text="Sequential line number for this service within the claim."
     )
@@ -559,8 +581,7 @@ class EDIServiceLine(models.Model):
     emg_service_pointer = models.BooleanField(
         default=False,
         help_text="Indicates if this service line was an emergency service."
-    )  
-
+    ) 
 
     charge_amount = models.DecimalField(
         max_digits=10,
@@ -590,6 +611,14 @@ class EDIServiceLine(models.Model):
         verbose_name = "EDI Service Line"
         verbose_name_plural = "EDI Service Lines"
 
+    def save(self, *args, **kwargs):
+        if self.line_number is None:
+            last_line = EDIServiceLine.objects.filter(claim=self.claim).aggregate(
+                models.Max('line_number')
+            )['line_number__max'] or 0
+            self.line_number = last_line + 1
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return f"ServiceLine {self.line_number} - {self.cpt_code}"
 

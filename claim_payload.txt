@@ -1,0 +1,180 @@
+######### CREATE CLAIM REQUEST ############
+
+{
+  "claim_number": "CLM123460",
+  "claim_date": "2025-09-21",
+  "patient_id": 101,
+  "claim_type": "institutional",
+  "patient_first_name": "john",
+  "patient_last_name": "Doe",
+  "patient_middle_name": "te",
+  "date_of_service": "2025-09-21",
+  "total_amount": 15,
+  "billing_provider_npi": 1,
+  "diagnoses": [
+    {
+      "diagnosis_code": "1",
+      "diagnosis_description": "Essential (primary) hypertension"
+    },
+    {
+      "diagnosis_code": "2",
+      "diagnosis_description": "Type 2 diabetes mellitus without complications"
+    }
+  ],
+  "service_lines": [
+    {   
+      "place_of_service": 1,
+      "rendering_provider": 1,
+      "service_code": "99213",
+      "charge_amount": 30.00,
+      "service_date": "2025-09-20",
+      "quantity": 1,
+      "unit_price": 100.0,
+      "procedure": 1,
+      "modifiers": [
+        {"modifier_code": 1},
+        {"modifier_code": 2}
+      ],
+      "medications": [
+        {"ndc_code": 1, "quantity": 30},
+        {"ndc_code": 2, "quantity": 10}
+      ],
+      "diagnosis_pointer_links": [
+        {"id": 1},
+        {"id": 2}
+      ]
+    },
+    {
+      "place_of_service": 2,
+      "rendering_provider": 2,
+      "service_code": "80053",
+      "charge_amount": 30.0,
+      "service_date": "2025-09-20",
+      "quantity": 1,
+      "unit_price": 50.0,
+      "procedure": 2,
+      "modifiers": [
+        {"modifier_code": 1},
+        {"modifier_code": 2}
+      ],
+      "medications": [
+        {"ndc_code": 1, "quantity": 30},
+        {"ndc_code": 2, "quantity": 10}
+      ],
+      "diagnosis_pointer_links": [
+        {"id": 2}
+      ]
+    }
+  ]
+}
+
+
+
+
+########## UPDATE CLAIM REQUEST ##########
+
+{
+    "id": 10,
+    "claim_number": "CLM123460",
+    "patient_id": "101",
+    "patient_first_name": "john",
+    "patient_middle_name": "te",
+    "patient_last_name": "Doe",
+    "date_of_service": "2025-09-21",
+    "total_amount": "15.00",
+    "claim_type": "institutional",
+    "billing_provider_npi": 1,
+    "payer": null,
+    "transaction_id": null,
+    "encounter_id": null,
+    "diagnoses": [
+        {
+            "id": 107,
+            "claim": 10,
+            "diagnosis_code": 1
+        },
+        {
+            "id": 108,
+            "claim": 10,
+            "diagnosis_code": 2
+        }
+    ],
+    "service_lines": [
+        {
+            "id": 108,
+            "modifiers": [
+                {
+                    "id": 215,
+                    "service_line": 108,
+                    "modifier_code": 1
+                },
+                {
+                    "id": 216,
+                    "service_line": 108,
+                    "modifier_code": 2
+                }
+            ],
+            "medications": [
+                {
+                    "id": 215,
+                    "quantity": "30.00",
+                    "service_line": 108,
+                    "ndc_code": 1
+                },
+                {
+                    "id": 216,
+                    "quantity": "10.00",
+                    "service_line": 108,
+                    "ndc_code": 2
+                }
+            ],
+            "line_number": 1,
+            "emg_service_pointer": false,
+            "charge_amount": "30.00",
+            "units": 1,
+            "service_date": "2025-09-20",
+            "claim": 10,
+            "rendering_provider": 1,
+            "procedure": 1,
+            "place_of_service": 1
+        },
+        {
+            "id": 109,
+            "modifiers": [
+                {
+                    "id": 217,
+                    "service_line": 109,
+                    "modifier_code": 1
+                },
+                {
+                    "id": 218,
+                    "service_line": 109,
+                    "modifier_code": 2
+                }
+            ],
+            "medications": [
+                {
+                    "id": 217,
+                    "quantity": "30.00",
+                    "service_line": 109,
+                    "ndc_code": 1
+                },
+                {
+                    "id": 218,
+                    "quantity": "10.00",
+                    "service_line": 109,
+                    "ndc_code": 2
+                }
+            ],
+            "line_number": 2,
+            "emg_service_pointer": false,
+            "charge_amount": "30.00",
+            "units": 1,
+            "service_date": "2025-09-20",
+            "claim": 10,
+            "rendering_provider": 2,
+            "procedure": 2,
+            "place_of_service": 2
+        }
+    ]
+}
