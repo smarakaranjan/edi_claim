@@ -63,33 +63,6 @@ class Dynamic837ClaimEngine:
         yield from chain(segs, children)
 
 
-    # def _resolve_element_dynamic(self, element, claim, payer, context):
-    #     rule = next((r for r in element.rules.all() if r.payer_id == payer.id), None)
-    #     if not rule:
-    #         return ""
-
-    #     if rule.rule_type == "FIELD" and rule.data_key and rule.data_key.extractor:
-    #         return self._apply_transformation(
-    #             self._extract_from_claim(claim, rule.data_key.extractor),
-    #             rule.transformation
-    #         )
-
-    #     if rule.rule_type == "CONSTANT":
-    #         return self._apply_transformation(rule.constant_value, rule.transformation)
-
-    #     if rule.rule_type == "FUNC" and rule.data_key:
-    #         func = context.get(rule.data_key.key)
-    #         if callable(func):
-    #             return self._apply_transformation(func(claim, payer, context), rule.transformation)
-
-    #     if rule.rule_type == "MAPPING" and rule.data_key:
-    #         mapping = rule.transformation or {}
-    #         value = self._extract_from_claim(claim, rule.data_key.extractor)
-    #         return mapping.get(value, "")
-
-    #     return ""
-
-
     def _resolve_element_dynamic(self, element, claim, payer, context):
         rule = next((r for r in element.rules.all() if r.payer_id == payer.id), None)
         if not rule:
