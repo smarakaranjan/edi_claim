@@ -620,7 +620,7 @@ class EDIServiceLine(models.Model):
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return f"ServiceLine {self.line_number} - {self.cpt_code}"
+        return f"ServiceLine {self.line_number}"
 
 
 class EDIServiceModifier(models.Model):
@@ -700,8 +700,8 @@ class EDISegment(models.Model):
 
     class Meta:
         db_table = 'superbill_edi_segment'
-        verbose_name = "EDI Service Loop"
-        verbose_name_plural = "EDI Service Loops"
+        verbose_name = "EDI Segment"
+        verbose_name_plural = "EDI Segments"
 
     def __str__(self):
         return f"{self.loop.code} - {self.name} (pos {self.position})"
@@ -790,8 +790,8 @@ class EDIPayerEndpoint(models.Model):
 
     class Meta:
         db_table = 'superbill_edi_payer_endpoint'
-        verbose_name = "EDI Element"
-        verbose_name_plural = "EDI Elements"
+        verbose_name = "EDI Payer Endpoint"
+        verbose_name_plural = "EDI Payer Endpoints"
 
     def __str__(self):
         return f"{self.payer.name} - {self.endpoint_type}"

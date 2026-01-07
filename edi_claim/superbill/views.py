@@ -18,6 +18,10 @@ from superbill.serializers import (
     EDIClaimSerializer
 )
 
+from rest_framework.views import APIView
+from superbill.models import EDIClaim, EDIPayer
+from superbill.edi_engine import Dynamic837ClaimEngine
+
 class EDIProviderViewSet(viewsets.ModelViewSet):
     queryset = EDIProvider.objects.all()
     serializer_class = EDIProviderSerializer
@@ -91,3 +95,55 @@ class EDIClaimViewSet(viewsets.ViewSet):
             return Response({"message": "Not found"}, status=status.HTTP_404_NOT_FOUND)
         claim.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+class Generate837ClaimAPIView(viewsets.ViewSet):
+    """
+    Generate a full 837 EDI claim dynamically for a given claim and payer.
+    """
+
+    def create(self, request, *args, **kwargs):
+        """
+        Expects JSON:
+        {
+            "claim_id": 123,
+            "payer_id": 1
+        }
+        """
+        claim_id = request.data.get("claim_id")
+        payer_id = request.data.get("payer_id")
+
+        if not claim_id or not payer_id:
+            return Response(
+                {"error": "claim_id and payer_id are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            claim = EDIClaim.objects.get(id=claim_id)
+        except EDIClaim.DoesNotExist:
+            return Response({"error": "Claim not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            payer = EDIPayer.objects.get(id=payer_id, active=True)
+        except EDIPayer.DoesNotExist:
+            return Response({"error": "Payer not found or inactive."}, status=status.HTTP_404_NOT_FOUND)
+
+        # --- Generate 837 using your Dynamic Engine ---
+        engine = Dynamic837ClaimEngine()
+        try:
+            edi_lines = list(engine.generate(claim, payer))
+            edi_string = "".join(edi_lines)
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to generate EDI claim: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({
+            "claim_number": claim.claim_number,
+            "payer": payer.name,
+            "edi_837": edi_string
+        }, status=status.HTTP_200_OK)
