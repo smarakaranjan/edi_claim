@@ -663,17 +663,17 @@ class LoopRepeatResolver:
 
     def resolve(self, loop):
 
-        # rule = loop.rules.filter(
-        #     payer=self.payer,
-        #     target_type="LOOP"
-        # ).order_by("order").first()
+        rule = loop.rules.filter(
+            payer=self.payer,
+            target_type="LOOP"
+        ).order_by("order").first()
 
-        # if not rule:
-        #     return [self.claim]
+        if not rule:
+            return [self.claim]
 
-        # if rule.rule_type == "FIELD":
-        #     items = self._extract(rule.data_key.extractor)
-        #     return list(items)[:loop.max_repeat]
+        if rule.rule_type == "FIELD":
+            items = self._extract(rule.data_key.extractor)
+            return list(items)[:loop.max_repeat]
 
         return [self.claim]
 
@@ -687,30 +687,6 @@ class LoopRepeatResolver:
             return []
 
 # EDI LOOP PROCESSOR
-# class LoopProcessor:
-
-#     def __init__(self, claim, payer, counter, validator):
-#         self.claim = claim
-#         self.payer = payer
-#         self.counter = counter
-#         self.validator = validator
-#         self.segment_processor = SegmentProcessor(
-#             claim, payer, counter, validator
-#         )
-#         self.repeat_resolver = LoopRepeatResolver(claim, payer)
-
-#     def process(self, loop):
-#         edi = ""
-
-#         for ctx in self.repeat_resolver.resolve(loop):
-#             for seg in loop.segments.order_by("position"):
-#                 edi += self.segment_processor.build(seg, loop.code)
-
-#             for sub in loop.subloops.all():
-#                 edi += self.process(sub)
-
-#         return edi
-
 class LoopProcessor:
 
     def __init__(self, claim, payer, counter, validator):
