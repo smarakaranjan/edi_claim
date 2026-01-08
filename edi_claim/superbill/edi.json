@@ -1,0 +1,1083 @@
+{
+    "envelopes": {
+        "ISA": {
+            "name": "Interchange Control Header",
+            "elements": {
+                "1": {
+                    "id": "ISA01",
+                    "name": "Authorization Information Qualifier",
+                    "data_type": "ID",
+                    "length": 2,
+                    "required": true
+                },
+                "2": {
+                    "id": "ISA02",
+                    "name": "Authorization Information",
+                    "data_type": "AN",
+                    "length": 10
+                },
+                "3": {
+                    "id": "ISA03",
+                    "name": "Security Information Qualifier",
+                    "data_type": "ID",
+                    "length": 2,
+                    "required": true
+                },
+                "4": {
+                    "id": "ISA04",
+                    "name": "Security Information",
+                    "data_type": "AN",
+                    "length": 10
+                },
+                "5": {
+                    "id": "ISA05",
+                    "name": "Interchange ID Qualifier (Sender)",
+                    "data_type": "ID",
+                    "length": 2,
+                    "required": true
+                },
+                "6": {
+                    "id": "ISA06",
+                    "name": "Interchange Sender ID",
+                    "data_type": "AN",
+                    "length": 15,
+                    "required": true
+                },
+                "7": {
+                    "id": "ISA07",
+                    "name": "Interchange ID Qualifier (Receiver)",
+                    "data_type": "ID",
+                    "length": 2,
+                    "required": true
+                },
+                "8": {
+                    "id": "ISA08",
+                    "name": "Interchange Receiver ID",
+                    "data_type": "AN",
+                    "length": 15,
+                    "required": true
+                },
+                "9": {
+                    "id": "ISA09",
+                    "name": "Interchange Date",
+                    "data_type": "DT",
+                    "length": 6,
+                    "required": true
+                },
+                "10": {
+                    "id": "ISA10",
+                    "name": "Interchange Time",
+                    "data_type": "TM",
+                    "length": 4,
+                    "required": true
+                },
+                "11": {
+                    "id": "ISA11",
+                    "name": "Interchange Control Standards Identifier",
+                    "data_type": "ID",
+                    "length": 1,
+                    "required": true
+                },
+                "12": {
+                    "id": "ISA12",
+                    "name": "Interchange Control Version Number",
+                    "data_type": "ID",
+                    "length": 5,
+                    "required": true
+                },
+                "13": {
+                    "id": "ISA13",
+                    "name": "Interchange Control Number",
+                    "data_type": "NO",
+                    "length": 9,
+                    "required": true
+                },
+                "14": {
+                    "id": "ISA14",
+                    "name": "Acknowledgment Requested",
+                    "data_type": "ID",
+                    "length": 1
+                },
+                "15": {
+                    "id": "ISA15",
+                    "name": "Usage Indicator",
+                    "data_type": "ID",
+                    "length": 1,
+                    "required": true
+                },
+                "16": {
+                    "id": "ISA16",
+                    "name": "Component Element Separator",
+                    "data_type": "AN",
+                    "length": 1,
+                    "required": true
+                }
+            }
+        },
+        "IEA": {
+            "name": "Interchange Control Trailer",
+            "elements": {
+                "1": {
+                    "id": "IEA01",
+                    "name": "Number of Included Functional Groups",
+                    "data_type": "NO",
+                    "required": true
+                },
+                "2": {
+                    "id": "IEA02",
+                    "name": "Interchange Control Number",
+                    "data_type": "NO",
+                    "required": true
+                }
+            }
+        },
+        "GS": {
+            "name": "Functional Group Header",
+            "elements": {
+                "1": {
+                    "id": "GS01",
+                    "name": "Functional Identifier Code",
+                    "data_type": "ID",
+                    "required": true
+                },
+                "2": {
+                    "id": "GS02",
+                    "name": "Application Sender Code",
+                    "data_type": "AN",
+                    "required": true
+                },
+                "3": {
+                    "id": "GS03",
+                    "name": "Application Receiver Code",
+                    "data_type": "AN",
+                    "required": true
+                },
+                "4": {
+                    "id": "GS04",
+                    "name": "Date",
+                    "data_type": "DT",
+                    "required": true
+                },
+                "5": {
+                    "id": "GS05",
+                    "name": "Time",
+                    "data_type": "TM",
+                    "required": true
+                },
+                "6": {
+                    "id": "GS06",
+                    "name": "Group Control Number",
+                    "data_type": "NO",
+                    "required": true
+                },
+                "7": {
+                    "id": "GS07",
+                    "name": "Responsible Agency Code",
+                    "data_type": "ID",
+                    "required": true
+                },
+                "8": {
+                    "id": "GS08",
+                    "name": "Version / Release / Industry Identifier Code",
+                    "data_type": "ID",
+                    "required": true
+                }
+            }
+        },
+        "GE": {
+            "name": "Functional Group Trailer",
+            "elements": {
+                "1": {
+                    "id": "GE01",
+                    "name": "Number of Transaction Sets Included",
+                    "data_type": "NO",
+                    "required": true
+                },
+                "2": {
+                    "id": "GE02",
+                    "name": "Group Control Number",
+                    "data_type": "NO",
+                    "required": true
+                }
+            }
+        },
+        "ST": {
+            "name": "Transaction Set Header",
+            "elements": {
+                "1": {
+                    "id": "ST01",
+                    "name": "Transaction Set Identifier Code",
+                    "data_type": "ID",
+                    "required": true
+                },
+                "2": {
+                    "id": "ST02",
+                    "name": "Transaction Set Control Number",
+                    "data_type": "AN",
+                    "required": true
+                },
+                "3": {
+                    "id": "ST03",
+                    "name": "Implementation Convention Reference",
+                    "data_type": "AN"
+                }
+            }
+        },
+        "SE": {
+            "name": "Transaction Set Trailer",
+            "elements": {
+                "1": {
+                    "id": "SE01",
+                    "name": "Number of Included Segments",
+                    "data_type": "NO",
+                    "required": true
+                },
+                "2": {
+                    "id": "SE02",
+                    "name": "Transaction Set Control Number",
+                    "data_type": "AN",
+                    "required": true
+                }
+            }
+        },
+        "BHT": {
+            "name": "Beginning of Hierarchical Transaction",
+            "elements": {
+                "1": {
+                    "id": "BHT01",
+                    "name": "Hierarchical Structure Code",
+                    "data_type": "ID"
+                },
+                "2": {
+                    "id": "BHT02",
+                    "name": "Transaction Set Purpose Code",
+                    "data_type": "ID"
+                },
+                "3": {
+                    "id": "BHT03",
+                    "name": "Reference Identification",
+                    "data_type": "AN"
+                },
+                "4": {
+                    "id": "BHT04",
+                    "name": "Date",
+                    "data_type": "DT"
+                },
+                "5": {
+                    "id": "BHT05",
+                    "name": "Time",
+                    "data_type": "TM"
+                },
+                "6": {
+                    "id": "BHT06",
+                    "name": "Transaction Type Code",
+                    "data_type": "ID"
+                }
+            }
+        }
+    },
+    "loops": {
+        "1000A": {
+            "name": "Submitter",
+            "segments": {
+                "NM1": {
+                    "name": "Submitter Name",
+                    "elements": {
+                        "1": {
+                            "id": "NM101",
+                            "name": "Entity Identifier Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "NM102",
+                            "name": "Entity Type Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "NM103",
+                            "name": "Submitter Last Name or Organization Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "NM104",
+                            "name": "First Name",
+                            "data_type": "AN"
+                        },
+                        "5": {
+                            "id": "NM105",
+                            "name": "Middle Name",
+                            "data_type": "AN"
+                        },
+                        "6": {
+                            "id": "NM106",
+                            "name": "Name Prefix",
+                            "data_type": "AN"
+                        },
+                        "7": {
+                            "id": "NM107",
+                            "name": "Name Suffix",
+                            "data_type": "AN"
+                        },
+                        "8": {
+                            "id": "NM108",
+                            "name": "Identification Code Qualifier",
+                            "data_type": "ID"
+                        },
+                        "9": {
+                            "id": "NM109",
+                            "name": "Submitter Identifier",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "N3": {
+                    "name": "Submitter Address",
+                    "elements": {
+                        "1": {
+                            "id": "N301",
+                            "name": "Address Information",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N302",
+                            "name": "Address Information",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "N4": {
+                    "name": "Submitter City / State / ZIP",
+                    "elements": {
+                        "1": {
+                            "id": "N401",
+                            "name": "City Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N402",
+                            "name": "State or Province Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "N403",
+                            "name": "Postal Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "N404",
+                            "name": "Country Code",
+                            "data_type": "ID"
+                        }
+                    }
+                },
+                "REF": {
+                    "name": "Submitter Additional Identification",
+                    "elements": {
+                        "1": {
+                            "id": "REF01",
+                            "name": "Reference Identification Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "REF02",
+                            "name": "Reference Identification",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "REF03",
+                            "name": "Description",
+                            "data_type": "AN"
+                        }
+                    }
+                }
+            }
+        },
+        "1000B": {
+            "name": "Receiver",
+            "segments": {
+                "NM1": {
+                    "name": "Receiver Name",
+                    "elements": {
+                        "1": {
+                            "id": "NM101",
+                            "name": "Entity Identifier Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "NM102",
+                            "name": "Entity Type Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "NM103",
+                            "name": "Receiver Last Name or Organization Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "NM104",
+                            "name": "First Name",
+                            "data_type": "AN"
+                        },
+                        "5": {
+                            "id": "NM105",
+                            "name": "Middle Name",
+                            "data_type": "AN"
+                        },
+                        "6": {
+                            "id": "NM106",
+                            "name": "Name Prefix",
+                            "data_type": "AN"
+                        },
+                        "7": {
+                            "id": "NM107",
+                            "name": "Name Suffix",
+                            "data_type": "AN"
+                        },
+                        "8": {
+                            "id": "NM108",
+                            "name": "Identification Code Qualifier",
+                            "data_type": "ID"
+                        },
+                        "9": {
+                            "id": "NM109",
+                            "name": "Receiver Identifier",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "N3": {
+                    "name": "Receiver Address",
+                    "elements": {
+                        "1": {
+                            "id": "N301",
+                            "name": "Address Information",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N302",
+                            "name": "Address Information",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "N4": {
+                    "name": "Receiver City / State / ZIP",
+                    "elements": {
+                        "1": {
+                            "id": "N401",
+                            "name": "City Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N402",
+                            "name": "State or Province Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "N403",
+                            "name": "Postal Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "N404",
+                            "name": "Country Code",
+                            "data_type": "ID"
+                        }
+                    }
+                }
+            }
+        },
+        "2000A": {
+            "name": "Billing Provider HL",
+            "segments": {
+                "HL": {
+                    "name": "Billing Provider Hierarchical Level",
+                    "elements": {
+                        "1": {
+                            "id": "HL01",
+                            "name": "Hierarchical ID Number",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "HL02",
+                            "name": "Hierarchical Parent ID Number",
+                            "data_type": "AN"
+                        },
+                        "3": {
+                            "id": "HL03",
+                            "name": "Hierarchical Level Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "HL04",
+                            "name": "Hierarchical Child Code",
+                            "data_type": "ID"
+                        }
+                    }
+                },
+                "PRV": {
+                    "name": "Provider Information",
+                    "elements": {
+                        "1": {
+                            "id": "PRV01",
+                            "name": "Provider Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "PRV02",
+                            "name": "Reference Identification Qualifier",
+                            "data_type": "ID"
+                        },
+                        "3": {
+                            "id": "PRV03",
+                            "name": "Provider Identifier",
+                            "data_type": "AN"
+                        }
+                    }
+                }
+            }
+        },
+        "2000B": {
+            "name": "Subscriber HL",
+            "segments": {
+                "HL": {
+                    "name": "Subscriber Hierarchical Level",
+                    "elements": {
+                        "1": {
+                            "id": "HL01",
+                            "name": "Hierarchical ID Number",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "HL02",
+                            "name": "Hierarchical Parent ID Number",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "HL03",
+                            "name": "Hierarchical Level Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "HL04",
+                            "name": "Hierarchical Child Code",
+                            "data_type": "ID"
+                        }
+                    }
+                },
+                "SBR": {
+                    "name": "Subscriber Information",
+                    "elements": {
+                        "1": {
+                            "id": "SBR01",
+                            "name": "Payer Responsibility Sequence Number Code",
+                            "data_type": "ID"
+                        },
+                        "2": {
+                            "id": "SBR02",
+                            "name": "Individual Relationship Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "SBR03",
+                            "name": "Reference Identification",
+                            "data_type": "AN"
+                        },
+                        "4": {
+                            "id": "SBR04",
+                            "name": "Name",
+                            "data_type": "AN"
+                        },
+                        "5": {
+                            "id": "SBR05",
+                            "name": "Insurance Type Code",
+                            "data_type": "ID"
+                        },
+                        "6": {
+                            "id": "SBR06",
+                            "name": "Coordination of Benefits Code",
+                            "data_type": "ID"
+                        }
+                    }
+                }
+            }
+        },
+        "2010AA": {
+            "name": "Billing Provider Name",
+            "segments": {
+                "NM1": {
+                    "name": "Billing Provider Name",
+                    "elements": {
+                        "1": {
+                            "id": "NM101",
+                            "name": "Entity Identifier Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "NM102",
+                            "name": "Entity Type Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "NM103",
+                            "name": "Last Name / Organization Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "NM104",
+                            "name": "First Name",
+                            "data_type": "AN"
+                        },
+                        "5": {
+                            "id": "NM105",
+                            "name": "Middle Name",
+                            "data_type": "AN"
+                        },
+                        "6": {
+                            "id": "NM106",
+                            "name": "Name Prefix",
+                            "data_type": "AN"
+                        },
+                        "7": {
+                            "id": "NM107",
+                            "name": "Name Suffix",
+                            "data_type": "AN"
+                        },
+                        "8": {
+                            "id": "NM108",
+                            "name": "Identification Code Qualifier",
+                            "data_type": "ID"
+                        },
+                        "9": {
+                            "id": "NM109",
+                            "name": "Billing Provider Identifier",
+                            "data_type": "AN",
+                            "required": true
+                        }
+                    }
+                },
+                "N3": {
+                    "name": "Billing Provider Address",
+                    "elements": {
+                        "1": {
+                            "id": "N301",
+                            "name": "Address Information",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N302",
+                            "name": "Address Information",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "N4": {
+                    "name": "Billing Provider City / State / ZIP",
+                    "elements": {
+                        "1": {
+                            "id": "N401",
+                            "name": "City Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N402",
+                            "name": "State or Province Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "N403",
+                            "name": "Postal Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "N404",
+                            "name": "Country Code",
+                            "data_type": "ID"
+                        }
+                    }
+                },
+                "REF": {
+                    "name": "Billing Provider Additional Identification",
+                    "elements": {
+                        "1": {
+                            "id": "REF01",
+                            "name": "Reference Identification Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "REF02",
+                            "name": "Reference Identification",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "REF03",
+                            "name": "Description",
+                            "data_type": "AN"
+                        }
+                    }
+                }
+            }
+        },
+        "2010BA": {
+            "name": "Subscriber Name",
+            "segments": {
+                "NM1": {
+                    "name": "Subscriber Name",
+                    "elements": {
+                        "1": {
+                            "id": "NM101",
+                            "name": "Entity Identifier Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "NM102",
+                            "name": "Entity Type Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "NM103",
+                            "name": "Last Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "NM104",
+                            "name": "First Name",
+                            "data_type": "AN"
+                        },
+                        "5": {
+                            "id": "NM105",
+                            "name": "Middle Name",
+                            "data_type": "AN"
+                        },
+                        "6": {
+                            "id": "NM106",
+                            "name": "Name Prefix",
+                            "data_type": "AN"
+                        },
+                        "7": {
+                            "id": "NM107",
+                            "name": "Name Suffix",
+                            "data_type": "AN"
+                        },
+                        "8": {
+                            "id": "NM108",
+                            "name": "Identification Code Qualifier",
+                            "data_type": "ID"
+                        },
+                        "9": {
+                            "id": "NM109",
+                            "name": "Subscriber Identifier",
+                            "data_type": "AN",
+                            "required": true
+                        }
+                    }
+                },
+                "N3": {
+                    "name": "Subscriber Address",
+                    "elements": {
+                        "1": {
+                            "id": "N301",
+                            "name": "Address Information",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N302",
+                            "name": "Address Information",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "N4": {
+                    "name": "Subscriber City / State / ZIP",
+                    "elements": {
+                        "1": {
+                            "id": "N401",
+                            "name": "City Name",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "N402",
+                            "name": "State or Province Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "N403",
+                            "name": "Postal Code",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "4": {
+                            "id": "N404",
+                            "name": "Country Code",
+                            "data_type": "ID"
+                        }
+                    }
+                },
+                "DMG": {
+                    "name": "Subscriber Demographic Information",
+                    "elements": {
+                        "1": {
+                            "id": "DMG01",
+                            "name": "Date Time Period Format Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "DMG02",
+                            "name": "Date of Birth",
+                            "data_type": "DT",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "DMG03",
+                            "name": "Gender Code",
+                            "data_type": "ID"
+                        },
+                        "4": {
+                            "id": "DMG04",
+                            "name": "Race / Ethnicity Code",
+                            "data_type": "ID"
+                        }
+                    }
+                }
+            }
+        },
+        "2300": {
+            "name": "Claim Information",
+            "segments": {
+                "CLM": {
+                    "name": "Claim Information",
+                    "elements": {
+                        "1": {
+                            "id": "CLM01",
+                            "name": "Patient Control Number",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "CLM02",
+                            "name": "Monetary Amount",
+                            "data_type": "R",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "CLM03",
+                            "name": "Claim Filing Indicator Code",
+                            "data_type": "ID"
+                        },
+                        "4": {
+                            "id": "CLM04",
+                            "name": "Non-Monetary Claim Information",
+                            "data_type": "AN"
+                        },
+                        "5": {
+                            "id": "CLM05",
+                            "name": "Provider Signature Indicator",
+                            "data_type": "ID"
+                        },
+                        "6": {
+                            "id": "CLM06",
+                            "name": "Yes/No Condition or Lien Code",
+                            "data_type": "ID"
+                        }
+                    }
+                },
+                "DTP": {
+                    "name": "Claim Dates",
+                    "elements": {
+                        "1": {
+                            "id": "DTP01",
+                            "name": "Date Time Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "DTP02",
+                            "name": "Date Time Period Format Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "DTP03",
+                            "name": "Claim Date",
+                            "data_type": "DT"
+                        }
+                    }
+                },
+                "HI": {
+                    "name": "Health Care Diagnosis Code",
+                    "elements": {
+                        "1": {
+                            "id": "HI01",
+                            "name": "Diagnosis Code Pointer",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "PWK": {
+                    "name": "Claim Supplemental Information",
+                    "elements": {
+                        "1": {
+                            "id": "PWK01",
+                            "name": "Report Type Code",
+                            "data_type": "ID"
+                        },
+                        "2": {
+                            "id": "PWK02",
+                            "name": "Attachment Transmission Code",
+                            "data_type": "ID"
+                        },
+                        "3": {
+                            "id": "PWK03",
+                            "name": "Reference Identification",
+                            "data_type": "AN"
+                        }
+                    }
+                },
+                "REF": {
+                    "name": "Claim Additional Identification",
+                    "elements": {
+                        "1": {
+                            "id": "REF01",
+                            "name": "Reference Identification Qualifier",
+                            "data_type": "ID"
+                        },
+                        "2": {
+                            "id": "REF02",
+                            "name": "Reference Identification",
+                            "data_type": "AN"
+                        }
+                    }
+                }
+            }
+        },
+        "2400": {
+            "name": "Service Line",
+            "segments": {
+                "LX": {
+                    "name": "Service Line Number",
+                    "elements": {
+                        "1": {
+                            "id": "LX01",
+                            "name": "Assigned Number",
+                            "data_type": "AN",
+                            "required": true
+                        }
+                    }
+                },
+                "SV1": {
+                    "name": "Professional Service",
+                    "elements": {
+                        "1": {
+                            "id": "SV101",
+                            "name": "Composite Medical Procedure Identifier",
+                            "data_type": "AN",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "SV102",
+                            "name": "Line Item Charge Amount",
+                            "data_type": "R",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "SV103",
+                            "name": "Unit or Basis for Measurement Code",
+                            "data_type": "ID"
+                        },
+                        "4": {
+                            "id": "SV104",
+                            "name": "Service Unit Count",
+                            "data_type": "R"
+                        },
+                        "5": {
+                            "id": "SV105",
+                            "name": "Place of Service Code",
+                            "data_type": "ID"
+                        },
+                        "6": {
+                            "id": "SV106",
+                            "name": "Service Type Code",
+                            "data_type": "ID"
+                        }
+                    }
+                },
+                "DTP": {
+                    "name": "Service Line Date",
+                    "elements": {
+                        "1": {
+                            "id": "DTP01",
+                            "name": "Date Time Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "2": {
+                            "id": "DTP02",
+                            "name": "Date Time Period Format Qualifier",
+                            "data_type": "ID",
+                            "required": true
+                        },
+                        "3": {
+                            "id": "DTP03",
+                            "name": "Service Date",
+                            "data_type": "DT"
+                        }
+                    }
+                },
+                "REF": {
+                    "name": "Service Line Additional Identification",
+                    "elements": {
+                        "1": {
+                            "id": "REF01",
+                            "name": "Reference Identification Qualifier",
+                            "data_type": "ID"
+                        },
+                        "2": {
+                            "id": "REF02",
+                            "name": "Reference Identification",
+                            "data_type": "AN"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

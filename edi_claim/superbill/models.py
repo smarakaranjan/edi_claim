@@ -671,6 +671,8 @@ class EDILoop(models.Model):
         help_text="Parent loop if nested (e.g., 2000B → 2010BA)."
     )
 
+    max_repeat = models.PositiveIntegerField(default=1)
+
     class Meta:
         db_table = 'superbill_edi_loop'
         verbose_name = "EDI Service Loop"
@@ -686,6 +688,7 @@ class EDISegment(models.Model):
         "superbill.EDILoop",
         on_delete=models.CASCADE,
         related_name="segments",
+        null=True,
         help_text="The loop this segment belongs to."
     )
 
@@ -704,7 +707,7 @@ class EDISegment(models.Model):
         verbose_name_plural = "EDI Segments"
 
     def __str__(self):
-        return f"{self.loop.code} - {self.name} (pos {self.position})"
+        return f"{self.name} (pos {self.position})"
     
 
 class EDIElement(models.Model):
@@ -719,7 +722,7 @@ class EDIElement(models.Model):
     position = models.PositiveIntegerField(
         help_text="Element order within the segment (e.g., 1 for NM101, 2 for NM102)."
     )
-
+    x12_id = models.CharField(max_length=10, help_text="X12 element identifier (e.g., 'NM1', 'DTM').")
     name = models.CharField(
         max_length=200,
         help_text="Human-readable element name (e.g., 'Last Name', 'Entity Identifier Code')."
@@ -732,7 +735,13 @@ class EDIElement(models.Model):
 
     length = models.PositiveIntegerField(
         default=50,
+        blank=True,
+        null=True,
         help_text="Maximum length allowed for this element."
+    )
+    required = models.BooleanField(
+        default=False,
+        help_text="Indicates if this element is required in the segment."
     )
 
     class Meta:
@@ -908,6 +917,10 @@ class EDIPayerRule(models.Model):
     Dynamic rule to populate an EDI element per payer.
     """
 
+    class RuleTarget(models.TextChoices):
+        ELEMENT = "ELEMENT", "Element"
+        LOOP = "LOOP", "Loop"
+
     class EDIRuleType(models.TextChoices):
         """
         Defines the standard endpoint types for EDI/API connectivity with payers.
@@ -922,6 +935,12 @@ class EDIPayerRule(models.Model):
         on_delete=models.CASCADE,
         related_name="rules",
         help_text="The EDI element this rule applies to."
+    )
+
+    target_type = models.CharField(
+        max_length=10,
+        choices=RuleTarget.choices,
+        default=RuleTarget.ELEMENT
     )
 
     payer = models.ForeignKey(
