@@ -262,95 +262,93 @@
 
 
 
+# superbill/management/commands/populate_payer_rules.py
+
 import json
 from django.core.management.base import BaseCommand
-from superbill.models import (
-    EDIPayer, EDILoop, EDISegment, EDIElement, EDIPayerRule
-)
-
-# Path to your JSON file
-JSON_PATH = "/home/smarak/Desktop/DataTerrain/edi_claim/edi_claim/superbill/edi.json"  # <-- update this
-
+from superbill.models import EDIPayer, EDILoop, EDISegment, EDIElement, EDIPayerRule
 
 class Command(BaseCommand):
-    help = "Populate EDIPayerRule, EDILoop, EDISegment, EDIElement from JSON"
+    help = "Populate EDIPayerRule for all elements and loops from JSON"
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "payer_name",
+            type=str,
+            help="Payer name to assign the rules to"
+        )
+        parser.add_argument(
+            "--json",
+            type=str,
+            required=True,
+            help="Path to JSON file with loops -> segments -> elements"
+        )
 
     def handle(self, *args, **options):
-        with open(JSON_PATH) as f:
-            edi_json = json.load(f)
+        payer_name = options["payer_name"]
+        json_path = options["json"]
 
-        payer, _ = EDIPayer.objects.get_or_create(name="DEFAULT PAYER")
-        self.stdout.write(f"Using payer: {payer.name}")
+        try:
+            payer = EDIPayer.objects.get(name=payer_name)
+        except EDIPayer.DoesNotExist:
+            self.stdout.write(self.style.ERROR(f"Payer '{payer_name}' not found"))
+            return
 
-        # --- POPULATE ENVELOPES ---
-        for env_name, env_data in edi_json.get("envelopes", {}).items():
-            segment, _ = EDISegment.objects.get_or_create(
-                name=env_name,
-                loop=None
-            )
-            for el_pos, el_data in env_data.get("elements", {}).items():
-                element, _ = EDIElement.objects.get_or_create(
-                    segment=segment,
-                    position=int(el_pos),
-                    defaults={
-                        "name": el_data.get("name"),
-                        "data_type": el_data.get("data_type"),
-                        "required": el_data.get("required", False),
-                    }
-                )
-                EDIPayerRule.objects.get_or_create(
-                    payer=payer,
-                    element=element,
-                    target_type="ELEMENT",
-                    defaults={
-                        "rule_type": "CONSTANT",
-                        "constant_value": "",
-                        "order": 1,
-                    }
-                )
+        with open(json_path) as f:
+            data = json.load(f)
 
-        # --- POPULATE LOOPS, SEGMENTS, ELEMENTS ---
-        for loop_code, loop_data in edi_json.get("loops", {}).items():
-            loop, _ = EDILoop.objects.get_or_create(
-                code=loop_code,
-                defaults={"name": loop_data.get("name")}
+        # Loop through JSON to create rules
+        for loop_data in data.get("loops", []):
+            loop_code = loop_data.get("code")
+            loop_obj, _ = EDILoop.objects.get_or_create(
+                code=loop_code, defaults={"name": loop_code}
             )
 
-            # Loop-level rule
+            # ---- LOOP level rule ----
             EDIPayerRule.objects.get_or_create(
                 payer=payer,
+                loop=loop_obj,
                 target_type="LOOP",
-                constant_value=loop_code,
                 defaults={
                     "rule_type": "CONSTANT",
-                    "order": 1
+                    "constant_value": loop_code,
+                    "order": 1,
                 }
             )
 
-            for seg_name, seg_data in loop_data.get("segments", {}).items():
-                segment, _ = EDISegment.objects.get_or_create(
+            for seg_data in loop_data.get("segments", []):
+                seg_name = seg_data.get("name")
+                seg_obj, _ = EDISegment.objects.get_or_create(
+                    loop=loop_obj,
                     name=seg_name,
-                    loop=loop
+                    defaults={"position": seg_data.get("position", 1)}
                 )
-                for el_pos, el_data in seg_data.get("elements", {}).items():
-                    element, _ = EDIElement.objects.get_or_create(
-                        segment=segment,
-                        position=int(el_pos),
+
+                for el_data in seg_data.get("elements", []):
+                    el_id = el_data.get("id")
+                    el_obj, _ = EDIElement.objects.get_or_create(
+                        segment=seg_obj,
+                        id=el_id,
                         defaults={
-                            "name": el_data.get("name"),
-                            "data_type": el_data.get("data_type"),
-                            "required": el_data.get("required", False),
-                        }
-                    )
-                    EDIPayerRule.objects.get_or_create(
-                        payer=payer,
-                        element=element,
-                        target_type="ELEMENT",
-                        defaults={
-                            "rule_type": "CONSTANT",
-                            "constant_value": "",
-                            "order": 1,
+                            "name": el_data.get("name", el_id),
+                            "position": el_data.get("position", 1),
+                            "required": el_data.get("required", False)
                         }
                     )
 
-        self.stdout.write(self.style.SUCCESS("✅ All EDIPayerRules populated successfully!"))
+                    # ---- ELEMENT level rule ----
+                    EDIPayerRule.objects.get_or_create(
+                        payer=payer,
+                        element=el_obj,
+                        target_type="ELEMENT",
+                        defaults={
+                            "rule_type": "CONSTANT",
+                            "constant_value": el_data.get("constant_value", ""),
+                            "order": el_data.get("order", 1),
+                            "max_length": el_data.get("max_length"),
+                            "pad_char": el_data.get("pad_char", " "),
+                            "pad_side": el_data.get("pad_side", "right")
+                        }
+                    )
+
+        self.stdout.write(self.style.SUCCESS("✅ EDIPayerRule population complete!"))
