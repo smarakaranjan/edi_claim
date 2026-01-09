@@ -921,133 +921,357 @@
 #         self.stdout.write(self.style.SUCCESS("✅ EDIPayerRule populated for all loops + envelope"))
 
 
+# import json
+# from datetime import datetime
+# from django.core.management.base import BaseCommand
+# from django.db import models
+# from superbill.models import EDIPayer, EDILoop, EDISegment, EDIElement, EDIPayerRule
+
+# # Envelope segments that must have strict X12 values
+# ENVELOPE_SEGMENTS = ["ISA", "GS", "ST", "SE", "GE", "IEA"]
+
+# # Envelope constant values per element
+# ENVELOPE_VALUES = {
+#     "ISA": [
+#         "00", "          ", "00", "          ",
+#         "ZZ", "SENDERID      ", "ZZ", "RECEIVERID    ",
+#         datetime.now().strftime("%y%m%d"),
+#         datetime.now().strftime("%H%M"),
+#         "U", "00501", "000000001", "0", "P", ":"
+#     ],
+#     "GS": [
+#         "HC", "SENDERID", "RECEIVERID",
+#         datetime.now().strftime("%Y%m%d"),
+#         datetime.now().strftime("%H%M"),
+#         "1", "X", "005010X222A1"
+#     ],
+#     "ST": ["837", "0001", "005010X222A1"],
+#     "SE": ["1", "0001"],
+#     "GE": ["1", "1"],
+#     "IEA": ["1", "000000001"]
+# }
+
+# # Generic type-safe defaults
+# TYPE_SAFE_DEFAULTS = {
+#     "AN": "ZZ",
+#     "ID": "00",
+#     "DT": datetime.now().strftime("%y%m%d"),
+#     "TM": datetime.now().strftime("%H%M"),
+#     "N0": "1",
+#     "R": "0.00",
+# }
+
+# # Default placeholders for loops
+# LOOP_DEFAULTS = {
+#     "1000A": {"NM1": ["ZZ","DOE","JOHN"], "N3": ["ADDR1"], "N4": ["CITY","ST","ZIP"], "REF": ["AB","123456"]},
+#     "1000B": {"NM1": ["ZZ","INS","CO"], "N3": ["ADDR2"], "N4": ["CITY","ST","ZIP"], "REF": ["ZZ","999999"]},
+#     "2000A": {"HL": ["1","0","20"], "PRV": ["AD","ZZ","123"]},
+#     "2000B": {"HL": ["2","1","22"], "SBR": ["P","18","EMPID","",""]},
+#     "2010AA": {"NM1": ["IL","DOE","JANE"], "N3": ["ADDR1"], "N4": ["CITY","ST","ZIP"], "REF": ["SY","123456789"]},
+#     "2010BA": {"NM1": ["PR","INS","CO"], "N3": ["ADDR2"], "N4": ["CITY","ST","ZIP"], "DMG": ["D8","19600101","F"]},
+#     "2300": {"CLM": ["1","100.00","A","B"], "DTP": ["434","D8","20260101"], "HI": ["ABK:123"], "PWK": ["", "", ""], "REF": ["D9","111"]},
+#     "2400": {"LX": ["1"], "SV1": ["HC:123","100.00","UN"], "DTP": ["472","D8","20260101"], "REF": ["EA","0001"]},
+# }
+
+# class Command(BaseCommand):
+#     help = "Populate EDIPayerRule with X12-compliant constant values"
+
+#     def add_arguments(self, parser):
+#         parser.add_argument("payer_name", type=str, help="Name of the payer")
+#         parser.add_argument("--json", type=str, required=False, help="Optional loop JSON path")
+
+#     def handle(self, *args, **options):
+#         payer_name = options["payer_name"]
+#         json_path = options.get("json")
+
+#         try:
+#             payer = EDIPayer.objects.get(name=payer_name)
+#         except EDIPayer.DoesNotExist:
+#             self.stderr.write(f"❌ Payer '{payer_name}' not found")
+#             return
+
+#         # Load optional JSON
+#         loop_data = LOOP_DEFAULTS
+#         if json_path:
+#             with open(json_path) as f:
+#                 loop_data.update(json.load(f).get("loops", {}))
+
+#         # --------------------------
+#         # Envelope segments
+#         # --------------------------
+#         for seg_name in ENVELOPE_SEGMENTS:
+#             segment, created_seg = EDISegment.objects.get_or_create(
+#                 loop=None,
+#                 name=seg_name,
+#                 defaults={"position": ENVELOPE_SEGMENTS.index(seg_name) + 1}
+#             )
+#             if created_seg:
+#                 self.stdout.write(f"🆕 Created envelope segment {seg_name}")
+
+#             for element in segment.elements.all():
+#                 idx = element.position - 1
+#                 value_list = ENVELOPE_VALUES.get(seg_name, [])
+#                 value = value_list[idx] if idx < len(value_list) else TYPE_SAFE_DEFAULTS.get(element.data_type, "ZZ")
+
+#                 EDIPayerRule.objects.update_or_create(
+#                     payer=payer,
+#                     element=element,
+#                     target_type="ELEMENT",
+#                     defaults={
+#                         "rule_type": "CONSTANT",
+#                         "constant_value": value,
+#                         "required": True,
+#                         "order": element.position,
+#                         "min_length": element.length or 1,
+#                         "max_length": element.length or 999,
+#                         "pad_char": " ",
+#                         "pad_side": "right",
+#                     }
+#                 )
+#             self.stdout.write(f"✅ Envelope segment {seg_name} rules populated")
+
+#         # --------------------------
+#         # Loop segments
+#         # --------------------------
+#         for loop_code, segments in loop_data.items():
+#             loop, created_loop = EDILoop.objects.get_or_create(code=loop_code)
+#             if created_loop:
+#                 self.stdout.write(f"🆕 Created loop {loop_code}")
+
+#             for seg_code, seg_values in segments.items():
+#                 # Determine position for new segment
+#                 max_pos = loop.segments.aggregate(max_pos=models.Max('position'))['max_pos'] or 0
+#                 segment, created_seg = EDISegment.objects.get_or_create(
+#                     loop=loop,
+#                     name=seg_code,
+#                     defaults={"position": max_pos + 1}
+#                 )
+#                 if created_seg:
+#                     self.stdout.write(f"🆕 Created segment {seg_code} in loop {loop_code}")
+
+#                 for element in segment.elements.all():
+#                     val_index = element.position - 1
+#                     if isinstance(seg_values, list):
+#                         value = str(seg_values[val_index]) if val_index < len(seg_values) else TYPE_SAFE_DEFAULTS.get(element.data_type, "ZZ")
+#                     elif isinstance(seg_values, dict):
+#                         value = str(seg_values.get(element.x12_id, TYPE_SAFE_DEFAULTS.get(element.data_type, "ZZ")))
+#                     else:
+#                         value = TYPE_SAFE_DEFAULTS.get(element.data_type, "ZZ")
+
+#                     EDIPayerRule.objects.update_or_create(
+#                         payer=payer,
+#                         element=element,
+#                         target_type="ELEMENT",
+#                         defaults={
+#                             "rule_type": "CONSTANT",
+#                             "constant_value": value,
+#                             "required": True,
+#                             "order": element.position,
+#                             "min_length": element.length or 1,
+#                             "max_length": element.length or 999,
+#                             "pad_char": " ",
+#                             "pad_side": "right",
+#                         }
+#                     )
+#                 self.stdout.write(f"✅ Loop {loop_code} segment {seg_code} rules populated")
+
+#         self.stdout.write(self.style.SUCCESS("✅ EDIPayerRule fully populated with strict X12 constants"))
+
+
+
 import json
 from datetime import datetime
-from decimal import Decimal
 from django.core.management.base import BaseCommand
 from superbill.models import EDIPayer, EDILoop, EDISegment, EDIElement, EDIPayerRule
 
-# Envelope segments and auto-handled segments
+# -------------------------------
+# Envelope segments with strict X12 values
+# -------------------------------
 ENVELOPE_SEGMENTS = ["ISA", "GS", "ST", "SE", "GE", "IEA"]
-AUTO_SEGMENTS = {"SE", "GE", "IEA"}
 
-# Default type-safe placeholders for EDI elements
+ENVELOPE_VALUES = {
+    "ISA": [
+        "00", "          ", "00", "          ",
+        "ZZ", "SENDERID      ", "ZZ", "RECEIVERID    ",
+        datetime.now().strftime("%y%m%d"),
+        datetime.now().strftime("%H%M"),
+        "U", "00501", "000000001", "0", "P", ":"
+    ],
+    "GS": [
+        "HC", "SENDERID", "RECEIVERID",
+        datetime.now().strftime("%Y%m%d"),
+        datetime.now().strftime("%H%M"),
+        "1", "X", "005010X222A1"
+    ],
+    "ST": ["837", "0001", "005010X222A1"],
+    "SE": ["1", "0001"],
+    "GE": ["1", "1"],
+    "IEA": ["1", "000000001"]
+}
+
+# -------------------------------
+# Type-safe defaults
+# -------------------------------
 TYPE_SAFE_DEFAULTS = {
-    "AN": "ZZZZ",        # Alphanumeric
-    "ID": "00",          # Identifier
-    "DT": datetime.now().strftime("%y%m%d"),  # Date (yyMMdd)
-    "TM": datetime.now().strftime("%H%M"),    # Time (HHMM)
-    "N0": 1,             # Numeric integer
-    "R": Decimal("0.00"),# Decimal
+    "AN": "ZZ",
+    "ID": "00",
+    "DT": datetime.now().strftime("%y%m%d"),
+    "TM": datetime.now().strftime("%H%M"),
+    "N0": "1",
+    "R": "0.00",
 }
 
-# Loop-level placeholders (simplified for demo)
+# -------------------------------
+# Default loop data
+# -------------------------------
 LOOP_DEFAULTS = {
-    "1000A": {"NM1": ["ZZ", "DOE", "JOHN"], "N3": ["ADDR1"], "N4": ["CITY","ST","ZIP"]},
-    "1000B": {"NM1": ["ZZ", "INS", "CO"], "N3": ["ADDR2"], "N4": ["CITY","ST","ZIP"]},
-    "2000A": {"HL": ["1","0","20"]},
-    "2000B": {"HL": ["2","1","22"], "SBR": ["P","18","EMPID"]},
-    "2300": {"CLM": ["1","100.00","A","B"]},
-    # Add more loops/segments as needed
+    "1000A": {"NM1": ["ZZ","DOE","JOHN"], "N3": ["ADDR1"], "N4": ["CITY","ST","ZIP"], "REF": ["AB","123456"]},
+    "1000B": {"NM1": ["ZZ","INS","CO"], "N3": ["ADDR2"], "N4": ["CITY","ST","ZIP"], "REF": ["ZZ","999999"]},
+    "2000A": {"HL": ["1","0","20"], "PRV": ["AD","ZZ","123"]},
+    "2000B": {"HL": ["2","1","22"], "SBR": ["P","18","EMPID","",""]},
+    "2010AA": {"NM1": ["IL","DOE","JANE"], "N3": ["ADDR1"], "N4": ["CITY","ST","ZIP"], "REF": ["SY","123456789"]},
+    "2010BA": {"NM1": ["PR","INS","CO"], "N3": ["ADDR2"], "N4": ["CITY","ST","ZIP"], "DMG": ["D8","19600101","F"]},
+    "2300": {"CLM": ["1","100.00","A","B"], "DTP": ["434","D8","20260101"], "HI": ["ABK:123"], "PWK": ["", "", ""], "REF": ["D9","111"]},
+    "2400": {"LX": ["1"], "SV1": ["HC:123","100.00","UN"], "DTP": ["472","D8","20260101"], "REF": ["EA","0001"]},
 }
-
 
 class Command(BaseCommand):
-    help = "Populate EDIPayerRule with X12-safe, type-compliant placeholders"
+    help = "Populate all EDI segments, elements, and EDIPayerRule constants for a payer"
 
     def add_arguments(self, parser):
-        parser.add_argument("payer_name", type=str)
-        parser.add_argument("--json", type=str, required=False, help="Optional loop JSON")
+        parser.add_argument("payer_name", type=str, help="Name of the payer")
+        parser.add_argument("--json", type=str, required=False, help="Optional loop JSON path")
 
     def handle(self, *args, **options):
         payer_name = options["payer_name"]
         json_path = options.get("json")
 
+        # Fetch payer
         try:
             payer = EDIPayer.objects.get(name=payer_name)
         except EDIPayer.DoesNotExist:
             self.stderr.write(f"❌ Payer '{payer_name}' not found")
             return
 
-        # Load JSON if provided
-        json_data = {}
+        # Load optional JSON loop data
+        loop_data = LOOP_DEFAULTS
         if json_path:
             with open(json_path) as f:
-                json_data = json.load(f)
+                loop_data.update(json.load(f).get("loops", {}))
+
+        missing_segments = []
+        missing_elements = []
 
         # --------------------------
-        # ENVELOPE SEGMENTS
+        # 1️⃣ Envelope segments
         # --------------------------
-        for seg_name in ENVELOPE_SEGMENTS:
-            try:
-                segment = EDISegment.objects.get(loop__isnull=True, name=seg_name)
-            except EDISegment.DoesNotExist:
-                self.stderr.write(f"❌ Envelope segment {seg_name} missing")
-                continue
+        for pos, seg_name in enumerate(ENVELOPE_SEGMENTS, start=1):
+            segment, _ = EDISegment.objects.get_or_create(
+                loop=None,
+                name=seg_name,
+                defaults={"position": pos}
+            )
+            self.stdout.write(f"✅ Envelope segment {seg_name} created/verified")
 
-            for element in segment.elements.all():
-                default_value = TYPE_SAFE_DEFAULTS.get(element.data_type, "ZZ")
-                EDIPayerRule.objects.get_or_create(
-                    payer=payer,
-                    element=element,
-                    target_type="ELEMENT",
-                    defaults={
-                        "rule_type": "CONSTANT",
-                        "constant_value": default_value,
-                        "required": False if seg_name in AUTO_SEGMENTS else element.required,
-                        "order": element.position,
-                        "min_length": element.length,
-                        "max_length": element.length,
-                        "pad_char": " ",
-                        "pad_side": "right",
-                    }
-                )
+            for idx, val in enumerate(ENVELOPE_VALUES.get(seg_name, []), start=1):
+                element = self.get_or_create_element(segment, idx, val)
+                self.create_rule(payer, element, val)
 
         # --------------------------
-        # LOOP SEGMENTS
+        # 2️⃣ Loop segments
         # --------------------------
-        loops_to_process = json_data.get("loops", LOOP_DEFAULTS)
-        for loop_code, loop_segments in loops_to_process.items():
+        for loop_code, segments in loop_data.items():
             try:
                 loop = EDILoop.objects.get(code=loop_code)
             except EDILoop.DoesNotExist:
-                self.stderr.write(f"❌ Loop {loop_code} not found")
+                missing_segments.append(f"Loop {loop_code} not found")
                 continue
 
-            for seg_code, seg_values in loop_segments.items():
-                try:
-                    segment = EDISegment.objects.get(loop=loop, name=seg_code)
-                except EDISegment.DoesNotExist:
-                    self.stderr.write(f"❌ Segment {seg_code} not in loop {loop_code}")
+            seg_position = 1
+            for seg_name, seg_values in segments.items():
+                segment, _ = EDISegment.objects.get_or_create(
+                    loop=loop,
+                    name=seg_name,
+                    defaults={"position": seg_position}  # ✅ important
+                )
+                seg_position += 1
+
+                if not isinstance(seg_values, list):
                     continue
 
-                for element in segment.elements.all():
-                    # Determine placeholder value
-                    val_index = element.position - 1
-                    if isinstance(seg_values, list):
-                        default_value = str(seg_values[val_index]) if val_index < len(seg_values) else "ZZ"
-                    elif isinstance(seg_values, dict):
-                        default_value = str(seg_values.get(element.id, "ZZ"))
-                    else:
-                        default_value = "ZZ"
+                for idx, val in enumerate(seg_values, start=1):
+                    element = self.get_or_create_element(segment, idx, val)
+                    self.create_rule(payer, element, val)
 
-                    # Type-safe fallback
-                    default_value = TYPE_SAFE_DEFAULTS.get(element.data_type, default_value)
+                self.stdout.write(f"✅ Loop {loop_code} segment {seg_name} rules populated")
 
-                    EDIPayerRule.objects.get_or_create(
-                        payer=payer,
-                        element=element,
-                        target_type="ELEMENT",
-                        defaults={
-                            "rule_type": "CONSTANT",
-                            "constant_value": default_value,
-                            "required": element.required,
-                            "order": element.position,
-                            "min_length": element.length,
-                            "max_length": element.length,
-                            "pad_char": " ",
-                            "pad_side": "right",
-                        }
-                    )
+        # --------------------------
+        # 3️⃣ Log missing segments/elements
+        # --------------------------
+        if missing_segments:
+            self.stderr.write("⚠️ Missing segments that could not be populated:")
+            for seg in missing_segments:
+                self.stderr.write(f" - {seg}")
 
-        self.stdout.write(self.style.SUCCESS("✅ EDIPayerRule fully populated with X12-safe placeholders"))
+        if missing_elements:
+            self.stderr.write("⚠️ Missing elements that could not be populated:")
+            for el in missing_elements:
+                self.stderr.write(f" - {el}")
+
+        self.stdout.write(self.style.SUCCESS("✅ All EDI rules populated"))
+
+    # ----------------------------------------------------------------------
+    # Helpers
+    # ----------------------------------------------------------------------
+    def get_or_create_element(self, segment, position, val):
+        """Create element if not exists, set default datatype and length"""
+        data_type = self.detect_data_type(val)
+        length = len(str(val))
+
+        element, _ = EDIElement.objects.get_or_create(
+            segment=segment,
+            position=position,
+            defaults={
+                "x12_id": f"E{position}",
+                "data_type": data_type,
+                "length": length,
+                "required": True,
+            }
+        )
+        return element
+
+    def create_rule(self, payer, element, val):
+        """Create or update EDIPayerRule"""
+        length = len(str(val))
+        EDIPayerRule.objects.update_or_create(
+            payer=payer,
+            element=element,
+            target_type="ELEMENT",
+            defaults={
+                "rule_type": "CONSTANT",
+                "constant_value": val,
+                "required": True,
+                "order": element.position,
+                "min_length": length,
+                "max_length": length,
+                "pad_char": " ",
+                "pad_side": "right",
+            }
+        )
+
+    def detect_data_type(self, val):
+        """Detect data type based on value"""
+        if isinstance(val, int):
+            return "N0"
+        if isinstance(val, float):
+            return "R"
+        if isinstance(val, str):
+            if val.isdigit():
+                return "N0"
+            elif len(val) == 6 and val.isdigit():
+                return "DT"
+            elif len(val) == 4 and val.isdigit():
+                return "TM"
+            else:
+                return "AN"
+        return "AN"
