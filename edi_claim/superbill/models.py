@@ -934,6 +934,8 @@ class EDIPayerRule(models.Model):
         "superbill.EDIElement",
         on_delete=models.CASCADE,
         related_name="rules",
+        blank=True,
+        null=True,
         help_text="The EDI element this rule applies to."
     )
 
@@ -948,6 +950,14 @@ class EDIPayerRule(models.Model):
         on_delete=models.CASCADE,
         related_name="rules",
         help_text="The payer this rule applies to."
+    )
+
+    loop = models.ForeignKey(
+        "superbill.EDILoop",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="rules"
     )
 
     min_length = models.PositiveIntegerField(

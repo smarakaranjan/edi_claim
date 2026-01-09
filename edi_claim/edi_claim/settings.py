@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'edi_claim.wsgi.application'
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pillar2',
+        'NAME': 'pillar3',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
