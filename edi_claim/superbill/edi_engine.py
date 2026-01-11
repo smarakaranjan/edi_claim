@@ -630,18 +630,20 @@ class ElementResolver:
 # EDI SEGMENT PROCESSOR
 # class SegmentProcessor:
 
-#     def __init__(self, claim, payer, counter, validator):
-#         self.resolver = ElementResolver(claim, payer)
+#     def __init__(self, payer, counter, validator):
 #         self.counter = counter
 #         self.validator = validator
+#         self.payer = payer
 
-#     def build(self, segment, loop_code):
+#     def build(self, segment, loop_code, claim_ctx):
+#         resolver = ElementResolver(claim_ctx, self.payer)
+
 #         self.counter.add()
 #         segment_index = self.counter.count
 
 #         values = []
 #         for el in segment.elements.order_by("position"):
-#             val = self.resolver.resolve(el)
+#             val = resolver.resolve(el)
 #             self.validator.validate_element(
 #                 value=val,
 #                 element=el,
@@ -653,6 +655,8 @@ class ElementResolver:
 
 #         return "*".join([segment.name] + values) + "~"
 
+# EDI SEGMENT PROCESSOR
+# EDI SEGMENT PROCESSOR
 class SegmentProcessor:
 
     def __init__(self, payer, counter, validator):
@@ -667,8 +671,30 @@ class SegmentProcessor:
         segment_index = self.counter.count
 
         values = []
-        for el in segment.elements.order_by("position"):
+        for el in segment.elements.filter(parent__isnull=True).order_by("position"):
             val = resolver.resolve(el)
+
+            # ✅ Handle composite elements: fetch sub-elements
+            sub_elements = segment.elements.filter(parent=el).order_by("position")
+            if sub_elements.exists():
+                sub_values = []
+                for sub_el in sub_elements:
+                    sub_val = resolver.resolve(sub_el)
+                    sub_values.append(sub_val)
+
+                    # Validate each sub-element
+                    self.validator.validate_element(
+                        value=sub_val,
+                        element=sub_el,
+                        segment_index=segment_index,
+                        loop_code=loop_code,
+                        segment_name=segment.name
+                    )
+
+                # Join sub-elements with ^
+                val = "^".join(sub_values)
+
+            # Validate parent element (in case it's required)
             self.validator.validate_element(
                 value=val,
                 element=el,
@@ -676,10 +702,10 @@ class SegmentProcessor:
                 loop_code=loop_code,
                 segment_name=segment.name
             )
+
             values.append(val)
 
         return "*".join([segment.name] + values) + "~"
-
 
 # EDI LOOP REPEAT RESOLVER
 class LoopRepeatResolver:
@@ -714,35 +740,6 @@ class LoopRepeatResolver:
             return []
 
 # EDI LOOP PROCESSOR
-# class LoopProcessor:
-
-#     def __init__(self, claim, payer, counter, validator):
-#         self.claim = claim
-#         self.payer = payer
-#         self.counter = counter
-#         self.validator = validator
-#         self.segment_processor = SegmentProcessor(
-#             claim, payer, counter, validator
-#         )
-#         self.repeat_resolver = LoopRepeatResolver(claim, payer)
-
-#     def process(self, loop):
-#         edi = ""
-
-#         # Resolve all repetitions of this loop
-#         for ctx in self.repeat_resolver.resolve(loop):
-#             # Process each segment in order
-#             for seg in loop.segments.order_by("position"):
-#                 # Build the segment using rules + transformations
-#                 # edi += self.segment_processor.build(seg, loop.code, claim_ctx=ctx)
-#                 edi += self.segment_processor.build(seg, loop.code)
-
-#             # Process subloops recursively
-#             for sub in loop.subloops.all():
-#                 edi += self.process(sub)
-
-#         return edi
-
 class LoopProcessor:
 
     def __init__(self, claim, payer, counter, validator):
@@ -771,30 +768,6 @@ class LoopProcessor:
         return edi
 
 # class EnvelopeProcessor:
-
-#     def __init__(self, claim, payer, counter, validator):
-#         self.segment_processor = SegmentProcessor(
-#             claim, payer, counter, validator
-#         )
-#         self.counter = counter
-#         self.validator = validator
-
-#     def open(self, name):
-#         if name == "ST":
-#             self.counter.start_transaction()
-
-#         seg = EDISegment.objects.get(loop__isnull=True, name=name)
-#         return self.segment_processor.build(seg, "ENVELOPE")
-
-#     def close(self, name):
-#         if name == "SE":
-#             expected = self.counter.end_transaction()
-#             actual = self.counter.count
-#             self.validator.validate_segment_count(expected, actual)
-
-#         seg = EDISegment.objects.get(loop__isnull=True, name=name)
-#         return self.segment_processor.build(seg, "ENVELOPE")
-
 class EnvelopeProcessor:
 
     def __init__(self, claim, payer, counter, validator):
@@ -902,3 +875,8 @@ class EDIEngine:
 
         self.validator.raise_if_errors()
         return edi
+
+
+
+
+ 

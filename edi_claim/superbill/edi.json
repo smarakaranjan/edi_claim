@@ -332,72 +332,6 @@
                             "data_type": "AN"
                         }
                     }
-                },
-                "N3": {
-                    "name": "Submitter Address",
-                    "elements": {
-                        "1": {
-                            "id": "N301",
-                            "name": "Address Information",
-                            "data_type": "AN",
-                            "required": true
-                        },
-                        "2": {
-                            "id": "N302",
-                            "name": "Address Information",
-                            "data_type": "AN"
-                        }
-                    }
-                },
-                "N4": {
-                    "name": "Submitter City / State / ZIP",
-                    "elements": {
-                        "1": {
-                            "id": "N401",
-                            "name": "City Name",
-                            "data_type": "AN",
-                            "required": true
-                        },
-                        "2": {
-                            "id": "N402",
-                            "name": "State or Province Code",
-                            "data_type": "ID",
-                            "required": true
-                        },
-                        "3": {
-                            "id": "N403",
-                            "name": "Postal Code",
-                            "data_type": "ID",
-                            "required": true
-                        },
-                        "4": {
-                            "id": "N404",
-                            "name": "Country Code",
-                            "data_type": "ID"
-                        }
-                    }
-                },
-                "REF": {
-                    "name": "Submitter Additional Identification",
-                    "elements": {
-                        "1": {
-                            "id": "REF01",
-                            "name": "Reference Identification Qualifier",
-                            "data_type": "ID",
-                            "required": true
-                        },
-                        "2": {
-                            "id": "REF02",
-                            "name": "Reference Identification",
-                            "data_type": "AN",
-                            "required": true
-                        },
-                        "3": {
-                            "id": "REF03",
-                            "name": "Description",
-                            "data_type": "AN"
-                        }
-                    }
                 }
             }
         },
@@ -454,50 +388,6 @@
                             "id": "NM109",
                             "name": "Receiver Identifier",
                             "data_type": "AN"
-                        }
-                    }
-                },
-                "N3": {
-                    "name": "Receiver Address",
-                    "elements": {
-                        "1": {
-                            "id": "N301",
-                            "name": "Address Information",
-                            "data_type": "AN",
-                            "required": true
-                        },
-                        "2": {
-                            "id": "N302",
-                            "name": "Address Information",
-                            "data_type": "AN"
-                        }
-                    }
-                },
-                "N4": {
-                    "name": "Receiver City / State / ZIP",
-                    "elements": {
-                        "1": {
-                            "id": "N401",
-                            "name": "City Name",
-                            "data_type": "AN",
-                            "required": true
-                        },
-                        "2": {
-                            "id": "N402",
-                            "name": "State or Province Code",
-                            "data_type": "ID",
-                            "required": true
-                        },
-                        "3": {
-                            "id": "N403",
-                            "name": "Postal Code",
-                            "data_type": "ID",
-                            "required": true
-                        },
-                        "4": {
-                            "id": "N404",
-                            "name": "Country Code",
-                            "data_type": "ID"
                         }
                     }
                 }
@@ -911,7 +801,24 @@
                         "5": {
                             "id": "CLM05",
                             "name": "Provider Signature Indicator",
-                            "data_type": "ID"
+                            "data_type": "COMPOSITE",
+                            "elements": {
+                                "1": {
+                                    "id": "CLM05-1",
+                                    "name": "Provider Signature Code",
+                                    "data_type": "ID"
+                                },
+                                "2": {
+                                    "id": "CLM05-2",
+                                    "name": "Facility Code Qualifier",
+                                    "data_type": "ID"
+                                },
+                                "3": {
+                                    "id": "CLM05-3",
+                                    "name": "Claim Frequency Code",
+                                    "data_type": "ID"
+                                }
+                            }
                         },
                         "6": {
                             "id": "CLM06",

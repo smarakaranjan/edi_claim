@@ -28,3 +28,205 @@ ISA (Interchange Header)
          └─ SE (Transaction Set Trailer)
       └─ GE (Functional Group Trailer)
 └─ IEA (Interchange Trailer)
+
+
+
+🔄 Clearing existing EDI structure...
+📦 Created envelope segment: ISA
+        🔹 Created element: ISA01 (Authorization Information Qualifier)
+        🔹 Created element: ISA02 (Authorization Information)
+        🔹 Created element: ISA03 (Security Information Qualifier)
+        🔹 Created element: ISA04 (Security Information)
+        🔹 Created element: ISA05 (Interchange ID Qualifier (Sender))
+        🔹 Created element: ISA06 (Interchange Sender ID)
+        🔹 Created element: ISA07 (Interchange ID Qualifier (Receiver))
+        🔹 Created element: ISA08 (Interchange Receiver ID)
+        🔹 Created element: ISA09 (Interchange Date)
+        🔹 Created element: ISA10 (Interchange Time)
+        🔹 Created element: ISA11 (Interchange Control Standards Identifier)
+        🔹 Created element: ISA12 (Interchange Control Version Number)
+        🔹 Created element: ISA13 (Interchange Control Number)
+        🔹 Created element: ISA14 (Acknowledgment Requested)
+        🔹 Created element: ISA15 (Usage Indicator)
+        🔹 Created element: ISA16 (Component Element Separator)
+📦 Created envelope segment: IEA
+        🔹 Created element: IEA01 (Number of Included Functional Groups)
+        🔹 Created element: IEA02 (Interchange Control Number)
+📦 Created envelope segment: GS
+        🔹 Created element: GS01 (Functional Identifier Code)
+        🔹 Created element: GS02 (Application Sender Code)
+        🔹 Created element: GS03 (Application Receiver Code)
+        🔹 Created element: GS04 (Date)
+        🔹 Created element: GS05 (Time)
+        🔹 Created element: GS06 (Group Control Number)
+        🔹 Created element: GS07 (Responsible Agency Code)
+        🔹 Created element: GS08 (Version / Release / Industry Identifier Code)
+📦 Created envelope segment: GE
+        🔹 Created element: GE01 (Number of Transaction Sets Included)
+        🔹 Created element: GE02 (Group Control Number)
+📦 Created envelope segment: ST
+        🔹 Created element: ST01 (Transaction Set Identifier Code)
+        🔹 Created element: ST02 (Transaction Set Control Number)
+        🔹 Created element: ST03 (Implementation Convention Reference)
+📦 Created envelope segment: SE
+        🔹 Created element: SE01 (Number of Included Segments)
+        🔹 Created element: SE02 (Transaction Set Control Number)
+📦 Created envelope segment: BHT
+        🔹 Created element: BHT01 (Hierarchical Structure Code)
+        🔹 Created element: BHT02 (Transaction Set Purpose Code)
+        🔹 Created element: BHT03 (Reference Identification)
+        🔹 Created element: BHT04 (Date)
+        🔹 Created element: BHT05 (Time)
+        🔹 Created element: BHT06 (Transaction Type Code)
+🌀 Created loop: 1000A
+    ➡ Created segment: NM1
+        🔹 Created element: NM101 (Entity Identifier Code)
+        🔹 Created element: NM102 (Entity Type Qualifier)
+        🔹 Created element: NM103 (Submitter Last Name or Organization Name)
+        🔹 Created element: NM104 (First Name)
+        🔹 Created element: NM105 (Middle Name)
+        🔹 Created element: NM106 (Name Prefix)
+        🔹 Created element: NM107 (Name Suffix)
+        🔹 Created element: NM108 (Identification Code Qualifier)
+        🔹 Created element: NM109 (Submitter Identifier)
+    ➡ Created segment: N3
+        🔹 Created element: N301 (Address Information)
+        🔹 Created element: N302 (Address Information)
+    ➡ Created segment: N4
+        🔹 Created element: N401 (City Name)
+        🔹 Created element: N402 (State or Province Code)
+        🔹 Created element: N403 (Postal Code)
+        🔹 Created element: N404 (Country Code)
+    ➡ Created segment: REF
+        🔹 Created element: REF01 (Reference Identification Qualifier)
+        🔹 Created element: REF02 (Reference Identification)
+        🔹 Created element: REF03 (Description)
+🌀 Created loop: 1000B
+    ➡ Created segment: NM1
+        🔹 Created element: NM101 (Entity Identifier Code)
+        🔹 Created element: NM102 (Entity Type Qualifier)
+        🔹 Created element: NM103 (Receiver Last Name or Organization Name)
+        🔹 Created element: NM104 (First Name)
+        🔹 Created element: NM105 (Middle Name)
+        🔹 Created element: NM106 (Name Prefix)
+        🔹 Created element: NM107 (Name Suffix)
+        🔹 Created element: NM108 (Identification Code Qualifier)
+        🔹 Created element: NM109 (Receiver Identifier)
+    ➡ Created segment: N3
+        🔹 Created element: N301 (Address Information)
+        🔹 Created element: N302 (Address Information)
+    ➡ Created segment: N4
+        🔹 Created element: N401 (City Name)
+        🔹 Created element: N402 (State or Province Code)
+        🔹 Created element: N403 (Postal Code)
+        🔹 Created element: N404 (Country Code)
+🌀 Created loop: 2000A
+    ➡ Created segment: HL
+        🔹 Created element: HL01 (Hierarchical ID Number)
+        🔹 Created element: HL02 (Hierarchical Parent ID Number)
+        🔹 Created element: HL03 (Hierarchical Level Code)
+        🔹 Created element: HL04 (Hierarchical Child Code)
+    ➡ Created segment: PRV
+        🔹 Created element: PRV01 (Provider Code)
+        🔹 Created element: PRV02 (Reference Identification Qualifier)
+        🔹 Created element: PRV03 (Provider Identifier)
+🌀 Created loop: 2000B
+    ➡ Created segment: HL
+        🔹 Created element: HL01 (Hierarchical ID Number)
+        🔹 Created element: HL02 (Hierarchical Parent ID Number)
+        🔹 Created element: HL03 (Hierarchical Level Code)
+        🔹 Created element: HL04 (Hierarchical Child Code)
+    ➡ Created segment: SBR
+        🔹 Created element: SBR01 (Payer Responsibility Sequence Number Code)
+        🔹 Created element: SBR02 (Individual Relationship Code)
+        🔹 Created element: SBR03 (Reference Identification)
+        🔹 Created element: SBR04 (Name)
+        🔹 Created element: SBR05 (Insurance Type Code)
+        🔹 Created element: SBR06 (Coordination of Benefits Code)
+🌀 Created loop: 2010AA
+    ➡ Created segment: NM1
+        🔹 Created element: NM101 (Entity Identifier Code)
+        🔹 Created element: NM102 (Entity Type Qualifier)
+        🔹 Created element: NM103 (Last Name / Organization Name)
+        🔹 Created element: NM104 (First Name)
+        🔹 Created element: NM105 (Middle Name)
+        🔹 Created element: NM106 (Name Prefix)
+        🔹 Created element: NM107 (Name Suffix)
+        🔹 Created element: NM108 (Identification Code Qualifier)
+        🔹 Created element: NM109 (Billing Provider Identifier)
+    ➡ Created segment: N3
+        🔹 Created element: N301 (Address Information)
+        🔹 Created element: N302 (Address Information)
+    ➡ Created segment: N4
+        🔹 Created element: N401 (City Name)
+        🔹 Created element: N402 (State or Province Code)
+        🔹 Created element: N403 (Postal Code)
+        🔹 Created element: N404 (Country Code)
+    ➡ Created segment: REF
+        🔹 Created element: REF01 (Reference Identification Qualifier)
+        🔹 Created element: REF02 (Reference Identification)
+        🔹 Created element: REF03 (Description)
+🌀 Created loop: 2010BA
+    ➡ Created segment: NM1
+        🔹 Created element: NM101 (Entity Identifier Code)
+        🔹 Created element: NM102 (Entity Type Qualifier)
+        🔹 Created element: NM103 (Last Name)
+        🔹 Created element: NM104 (First Name)
+        🔹 Created element: NM105 (Middle Name)
+        🔹 Created element: NM106 (Name Prefix)
+        🔹 Created element: NM107 (Name Suffix)
+        🔹 Created element: NM108 (Identification Code Qualifier)
+        🔹 Created element: NM109 (Subscriber Identifier)
+    ➡ Created segment: N3
+        🔹 Created element: N301 (Address Information)
+        🔹 Created element: N302 (Address Information)
+    ➡ Created segment: N4
+        🔹 Created element: N401 (City Name)
+        🔹 Created element: N402 (State or Province Code)
+        🔹 Created element: N403 (Postal Code)
+        🔹 Created element: N404 (Country Code)
+    ➡ Created segment: DMG
+        🔹 Created element: DMG01 (Date Time Period Format Qualifier)
+        🔹 Created element: DMG02 (Date of Birth)
+        🔹 Created element: DMG03 (Gender Code)
+        🔹 Created element: DMG04 (Race / Ethnicity Code)
+🌀 Created loop: 2300
+    ➡ Created segment: CLM
+        🔹 Created element: CLM01 (Patient Control Number)
+        🔹 Created element: CLM02 (Monetary Amount)
+        🔹 Created element: CLM03 (Claim Filing Indicator Code)
+        🔹 Created element: CLM04 (Non-Monetary Claim Information)
+        🔹 Created element: CLM05 (Provider Signature Indicator)
+        🔹 Created element: CLM06 (Yes/No Condition or Lien Code)
+    ➡ Created segment: DTP
+        🔹 Created element: DTP01 (Date Time Qualifier)
+        🔹 Created element: DTP02 (Date Time Period Format Qualifier)
+        🔹 Created element: DTP03 (Claim Date)
+    ➡ Created segment: HI
+        🔹 Created element: HI01 (Diagnosis Code Pointer)
+    ➡ Created segment: PWK
+        🔹 Created element: PWK01 (Report Type Code)
+        🔹 Created element: PWK02 (Attachment Transmission Code)
+        🔹 Created element: PWK03 (Reference Identification)
+    ➡ Created segment: REF
+        🔹 Created element: REF01 (Reference Identification Qualifier)
+        🔹 Created element: REF02 (Reference Identification)
+🌀 Created loop: 2400
+    ➡ Created segment: LX
+        🔹 Created element: LX01 (Assigned Number)
+    ➡ Created segment: SV1
+        🔹 Created element: SV101 (Composite Medical Procedure Identifier)
+        🔹 Created element: SV102 (Line Item Charge Amount)
+        🔹 Created element: SV103 (Unit or Basis for Measurement Code)
+        🔹 Created element: SV104 (Service Unit Count)
+        🔹 Created element: SV105 (Place of Service Code)
+        🔹 Created element: SV106 (Service Type Code)
+    ➡ Created segment: DTP
+        🔹 Created element: DTP01 (Date Time Qualifier)
+        🔹 Created element: DTP02 (Date Time Period Format Qualifier)
+        🔹 Created element: DTP03 (Service Date)
+    ➡ Created segment: REF
+        🔹 Created element: REF01 (Reference Identification Qualifier)
+        🔹 Created element: REF02 (Reference Identification)
+✅ EDI JSON loaded successfully.
+(env) smarakaranjanparida@192 edi_claim % 

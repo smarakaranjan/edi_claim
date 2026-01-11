@@ -681,6 +681,10 @@ class EDILoop(models.Model):
     def __str__(self):
         return f"{self.code} - {self.name}"
     
+    @property
+    def child_loops(self):
+        return EDILoop.objects.filter(parent_loop=self)
+    
 
 class EDISegment(models.Model):
 
@@ -719,6 +723,14 @@ class EDIElement(models.Model):
         help_text="The segment this element belongs to."
     )
 
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='sub_elements'
+    )
+    
     position = models.PositiveIntegerField(
         help_text="Element order within the segment (e.g., 1 for NM101, 2 for NM102)."
     )
