@@ -705,6 +705,8 @@ class EDISegment(models.Model):
         help_text="Ordering of this segment inside the loop."
     )
 
+    max_repeat = models.IntegerField(default=1)
+
     class Meta:
         db_table = 'superbill_edi_segment'
         verbose_name = "EDI Segment"
@@ -730,7 +732,7 @@ class EDIElement(models.Model):
         on_delete=models.CASCADE,
         related_name='sub_elements'
     )
-    
+
     position = models.PositiveIntegerField(
         help_text="Element order within the segment (e.g., 1 for NM101, 2 for NM102)."
     )

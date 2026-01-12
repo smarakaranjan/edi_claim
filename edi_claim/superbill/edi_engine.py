@@ -574,6 +574,8 @@ class TransformUtils:
 
         return value
 
+
+
 # EDI ELEMENTS RESOLVER
 class ElementResolver:
 
@@ -655,7 +657,7 @@ class ElementResolver:
 
 #         return "*".join([segment.name] + values) + "~"
 
-# EDI SEGMENT PROCESSOR
+ 
 # EDI SEGMENT PROCESSOR
 class SegmentProcessor:
 
